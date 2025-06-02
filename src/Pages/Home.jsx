@@ -9,6 +9,7 @@ import { RxCross1 } from "react-icons/rx";
 import CartCard from "../Components/CartCard";
 import { useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
+import { Link, Outlet } from "react-router-dom";
 function Home() {
   const { input, category, setcategory, showCart, setShowCart } =
     useContext(SearchItemContext);
@@ -41,7 +42,7 @@ function Home() {
     <>
       <ToastContainer />
 
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="px-5">
         {!input.length ? (
           <div className="mt-4 px-4">
@@ -112,7 +113,7 @@ function Home() {
                 </div>
 
                 <button className="w-full mt-4 bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg transition">
-                  Proceed to Checkout
+                  <Link to='/checkout'> Proceed to Checkout</Link>
                 </button>
               </div>
             )}

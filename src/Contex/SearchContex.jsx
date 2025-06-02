@@ -5,7 +5,8 @@ function SearchContex({ children }) {
   const [input, setInput] = useState("");
   const [category, setcategory] = useState(food_items);
   const [showCart, setShowCart] = useState(false);
-  let data = { input, setInput, category, setcategory, showCart, setShowCart };
+  const [isUserLoggedIn,setIsUserLoggedIn] = useState(false)
+  let data = { input, setInput, category, setcategory, showCart, setShowCart,isUserLoggedIn,setIsUserLoggedIn };
   return (
     <div>
       <SearchItemContext.Provider value={data}>
