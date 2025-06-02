@@ -29,9 +29,12 @@ function Home() {
     }
   };
   const items = useSelector((state) => state.cart);
-  const subTotal = items.reduce((total, items) => total + items.price, 0);
+  const subTotal = items.reduce(
+    (total, items) => total + items.price * items.qty,
+    0
+  );
   const deliveryCharges = 25;
-  const taxes = subTotal * (0.5 / 100);
+  const taxes = Math.floor(subTotal * (5 / 100));
   const total = subTotal + deliveryCharges + taxes;
 
   return (

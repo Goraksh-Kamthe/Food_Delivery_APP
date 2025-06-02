@@ -10,11 +10,18 @@ import { toast } from "react-toastify";
 function FoodItemCard({ item }) {
   const isVeg = item.food_type.toLowerCase() === "veg";
   const dispatch = useDispatch();
-  const handleAddToCart = (item) =>{
-  dispatch(AddItem({ id: item.id,name:item.food_name,price:item.price,image:item.food_image,qty:1 }))
-  toast.success('Dish Added in cart')
-
-  }
+  const handleAddToCart = (item) => {
+    dispatch(
+      AddItem({
+        id: item.id,
+        name: item.food_name,
+        price: item.price,
+        image: item.food_image,
+        qty: 1,
+      })
+    );
+    toast.success("Dish Added in cart");
+  };
   return (
     <div className="w-full max-w-sm bg-white rounded-2xl shadow-lg hover:shadow-lg transition duration-300 overflow-hidden group border border-gray-100">
       <div className="relative">
