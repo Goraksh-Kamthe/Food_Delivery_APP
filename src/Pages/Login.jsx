@@ -1,64 +1,66 @@
 import { useContext, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // use `react-router-dom`
+import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { SearchItemContext } from "../Contex/SearchContex";
 
-export default function Login() {
+const Login = () => {
   const navigate = useNavigate();
-  const [userData, setUserData] = useState({});
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-  });
-  const [error, setError] = useState({
-    userNameError: "",
-    passwordError: "",
-  });
   const { isUserLoggedIn, setIsUserLoggedIn } = useContext(SearchItemContext);
 
-  const handleInput = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const [userData, setUserData] = useState(null);
+  const [formData, setFormData] = useState({ username: "", password: "" });
+  const [errors, setErrors] = useState({});
 
-    if (e.target.name === "username" && error.userNameError) {
-      setError((prev) => ({ ...prev, userNameError: "" }));
+  useEffect(() => {
+    const storedData = localStorage.getItem("UserData");
+    if (storedData) {
+      setUserData(JSON.parse(storedData));
     }
-    if (e.target.name === "password" && error.passwordError) {
-      setError((prev) => ({ ...prev, passwordError: "" }));
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+
+    // Clear error when user types
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: "" }));
     }
   };
-  useEffect(() => {
-    const getUserData = JSON.parse(localStorage.getItem("UserData"));
-    setUserData(getUserData);
-  }, []);
-  const submitForm = (e) => {
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.username) newErrors.username = "Username is required";
+    if (!formData.password) newErrors.password = "Password is required";
+    return newErrors;
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    let errors = {};
-    if (!formData.username) {
-      errors.userNameError = "Username is required";
-    }
-    if (!formData.password) {
-      errors.passwordError = "Password is required";
+
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
     }
 
-    if (Object.keys(errors).length > 0) {
-      setError(errors);
-      return;
-    }
     if (
-      userData.username !== formData.username &&
-      userData.username !== formData.password
+      !userData ||
+      userData.username !== formData.username ||
+      userData.password !== formData.password
     ) {
-      toast.error("Username and password data not matches");
+      toast.error("Username or password is incorrect");
       return;
-    } else {
-      toast.success("Login Successful");
-      setFormData({ username: "", password: "" });
-      setTimeout(() => {
-        setIsUserLoggedIn(true);
-        navigate("/");
-      }, 1000)
     }
+
+    toast.success("Login Successful");
+    setFormData({ username: "", password: "" });
+
+    setTimeout(() => {
+      setIsUserLoggedIn(true);
+      navigate("/");
+    }, 1000);
   };
 
   return (
@@ -72,57 +74,38 @@ export default function Login() {
           <p className="text-center text-gray-500 mb-6">
             Login to your account
           </p>
-          <form onSubmit={submitForm}>
-            <div className="mb-4">
-              <label
-                htmlFor="username"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Username
-              </label>
-              <input
-                type="text"
-                value={formData.username}
-                id="username"
-                name="username"
-                placeholder="Enter your username"
-                onChange={handleInput}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              {error.userNameError && (
-                <p className="text-red-600 text-sm mt-1">
-                  {error.userNameError}
-                </p>
-              )}
-            </div>
-            <div className="mb-6">
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Password
-              </label>
-              <input
-                type="password"
-                value={formData.password}
-                id="password"
-                name="password"
-                placeholder="Enter your password"
-                onChange={handleInput}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              {error.passwordError && (
-                <p className="text-red-600 text-sm mt-1">
-                  {error.passwordError}
-                </p>
-              )}
-            </div>
+
+          <form onSubmit={handleSubmit}>
+            {["username", "password"].map((field) => (
+              <div className="mb-4" key={field}>
+                <label
+                  htmlFor={field}
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  {field.charAt(0).toUpperCase() + field.slice(1)}
+                </label>
+                <input
+                  type={field === "password" ? "password" : "text"}
+                  name={field}
+                  id={field}
+                  value={formData[field]}
+                  placeholder={`Enter your ${field}`}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                {errors[field] && (
+                  <p className="text-red-600 text-sm mt-1">{errors[field]}</p>
+                )}
+              </div>
+            ))}
+
             <button
               type="submit"
               className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition duration-300 shadow"
             >
               Login
             </button>
+
             <p className="mt-4 text-center text-sm text-gray-600">
               Don't have an account?{" "}
               <Link to="/sign-up" className="text-blue-600 hover:underline">
@@ -134,4 +117,6 @@ export default function Login() {
       </div>
     </>
   );
-}
+};
+
+export default Login;

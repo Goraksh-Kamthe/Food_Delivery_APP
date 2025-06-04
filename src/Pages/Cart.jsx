@@ -1,12 +1,18 @@
-import React from 'react'
+import React from 'react';
+import PropTypes from 'prop-types';
 
-function Cart({children}) {
+function Cart({ children }) {
   return (
     <>
-{children}
-    cart
+      {children}
+      cart
     </>
-  )
+  );
 }
 
-export default Cart
+// ✅ PropTypes for type checking
+Cart.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
+export default Cart;

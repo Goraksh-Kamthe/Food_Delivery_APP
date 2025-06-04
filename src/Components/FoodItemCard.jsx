@@ -4,15 +4,16 @@ import { GiChickenOven } from "react-icons/gi";
 import { FaRupeeSign } from "react-icons/fa";
 import { BsCartPlusFill } from "react-icons/bs";
 import { useDispatch } from "react-redux";
-import { AddItem } from "../Redux/CartSlice";
+import { addItem } from "../Redux/CartSlice";
 import { toast } from "react-toastify";
+import PropTypes from "prop-types";
 
 function FoodItemCard({ item }) {
   const isVeg = item.food_type.toLowerCase() === "veg";
   const dispatch = useDispatch();
   const handleAddToCart = (item) => {
     dispatch(
-      AddItem({
+      addItem({
         id: item.id,
         name: item.food_name,
         price: item.price,
@@ -73,3 +74,13 @@ function FoodItemCard({ item }) {
 }
 
 export default FoodItemCard;
+FoodItemCard.PropTypes = {
+  item: PropTypes.shape({
+    id: PropTypes.number,
+    food_name: PropTypes.string,
+    food_category: PropTypes.string,
+    food_type: PropTypes.string,
+    food_quantity: PropTypes.number,
+    food_image: PropTypes.string,
+  }),
+};

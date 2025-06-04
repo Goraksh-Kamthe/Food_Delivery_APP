@@ -1,39 +1,36 @@
 import { createSlice } from "@reduxjs/toolkit";
-const CartSlice = createSlice({
+
+const findItemIndex = (state, id) => state.findIndex(item => item.id === id);
+
+const cartSlice = createSlice({
   name: "cart",
   initialState: [],
   reducers: {
-    AddItem: (state, actions) => {
-      const existItemIndex = state.findIndex(
-        (item) => item.id === actions.payload.id
-      );
-      if (existItemIndex !== -1) {
-        state[existItemIndex].qty += 1;
+    addItem: (state, { payload }) => {
+      const index = findItemIndex(state, payload.id);
+      if (index !== -1) {
+        state[index].qty += 1;
       } else {
-        state.push(actions.payload);
+        state.push(payload);
       }
     },
-    RemoveItem: (state, actions) => {
-      return state.filter((item) => item.id !== actions.payload);
+    removeItem: (state, { payload }) => {
+      return state.filter(item => item.id !== payload);
     },
-    IncrementCount:(state,actions)=>{
-      const existItemIndex = state.findIndex(
-        (item) => item.id === actions.payload.id
-      );
-      if (existItemIndex !== -1) {
-        state[existItemIndex].qty +=1
+    incrementCount: (state, { payload }) => {
+      const index = findItemIndex(state, payload.id);
+      if (index !== -1) {
+        state[index].qty += 1;
       }
     },
-    DecrementCount:(state,actions)=>{
-      const existItemIndex = state.findIndex(
-        (item) => item.id === actions.payload.id
-      );
-      if (existItemIndex !== -1 &&  state[existItemIndex].qty>1) {
-        state[existItemIndex].qty -=1
+    decrementCount: (state, { payload }) => {
+      const index = findItemIndex(state, payload.id);
+      if (index !== -1 && state[index].qty > 1) {
+        state[index].qty -= 1;
       }
-    }
+    },
   },
 });
 
-export const { AddItem, RemoveItem,DecrementCount, IncrementCount} = CartSlice.actions;
-export default CartSlice.reducer;
+export const { addItem, removeItem, incrementCount, decrementCount } = cartSlice.actions;
+export default cartSlice.reducer;

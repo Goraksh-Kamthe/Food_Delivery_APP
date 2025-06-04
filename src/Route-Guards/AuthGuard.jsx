@@ -1,16 +1,22 @@
 import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import SearchContex from "../Contex/SearchContex";
+import { SearchItemContext } from "../Contex/SearchContex";
 
-function AuthGuard({ component }) {
+function AuthGuard({ children }) {
   const navigate = useNavigate();
-  const { isUserLoggedIn } = useContext(SearchContex);
+  const { isUserLoggedIn } = useContext(SearchItemContext);
+
   useEffect(() => {
     if (!isUserLoggedIn) {
-      navigate("/");
+      navigate("/login");
     }
-  }, []);
-  return <>{component}</>;
+  }, [isUserLoggedIn, navigate]);
+
+  if (!isUserLoggedIn) {
+    return null; // 
+  }
+
+  return <>{children}</>;
 }
 
 export default AuthGuard;
