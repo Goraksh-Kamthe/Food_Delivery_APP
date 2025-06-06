@@ -9,6 +9,7 @@ import MyAccount from "./Pages/MyAccount";
 import Checkout from "./Pages/Checkout";
 import AuthGuard from "./Route-Guards/AuthGuard";
 import Layout from "./Components/Layout";
+import Myorders from "./Pages/Myorders";
 
 const ProtectedRoute = ({ children }) => <AuthGuard>{children}</AuthGuard>;
 
@@ -39,6 +40,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Checkout />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-orders"
+            element={
+              <ProtectedRoute>
+                <Myorders />
               </ProtectedRoute>
             }
           />

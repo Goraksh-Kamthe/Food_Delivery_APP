@@ -1,12 +1,11 @@
-import React from "react";
-import { LuLeaf } from "react-icons/lu";
-import { GiChickenOven } from "react-icons/gi";
-import { FaRupeeSign } from "react-icons/fa";
-import { BsCartPlusFill } from "react-icons/bs";
-import { useDispatch } from "react-redux";
-import { addItem } from "../Redux/CartSlice";
-import { toast } from "react-toastify";
 import PropTypes from "prop-types";
+import { BsCartPlusFill } from "react-icons/bs";
+import { FaRupeeSign } from "react-icons/fa";
+import { GiChickenOven } from "react-icons/gi";
+import { LuLeaf } from "react-icons/lu";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import { addItem } from "../Redux/CartSlice";
 
 function FoodItemCard({ item }) {
   const isVeg = item.food_type.toLowerCase() === "veg";

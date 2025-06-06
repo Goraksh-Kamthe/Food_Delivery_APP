@@ -1,4 +1,3 @@
-import React from "react";
 import PropTypes from "prop-types";
 import { MdDelete } from "react-icons/md";
 import { useDispatch } from "react-redux";

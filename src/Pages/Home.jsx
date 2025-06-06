@@ -9,7 +9,7 @@ import { RxCross1 } from "react-icons/rx";
 import CartCard from "../Components/CartCard";
 import { useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
-import { Link, Outlet } from "react-router-dom";
+import { Link } from "react-router-dom";
 function Home() {
   const { input, category, setcategory, showCart, setShowCart } =
     useContext(SearchItemContext);
@@ -30,7 +30,8 @@ function Home() {
     }
   };
   const items = useSelector((state) => state.cart);
-  const subTotal = items.reduce(
+  const itemWithoutOrderPlaced = items.filter(x=> !x.orderPlaced)
+  const subTotal = itemWithoutOrderPlaced.reduce(
     (total, items) => total + items.price * items.qty,
     0
   );
@@ -72,6 +73,7 @@ function Home() {
             <FoodItemCard key={item.id} item={item} />
           ))}
         </div>
+        
        {showCart && (
   <div className="fixed top-0 right-0 w-full md:w-[40vw] h-full bg-white shadow-2xl z-50 transition-all duration-500 overflow-y-auto rounded-l-3xl border-l-4 border-orange-400">
     {/* Header */}
@@ -85,9 +87,9 @@ function Home() {
 
     {/* Content */}
     <div className="p-5">
-      {items.length ? (
+      {itemWithoutOrderPlaced.length ? (
         <div className="space-y-4">
-          {items.map((item) => (
+          {itemWithoutOrderPlaced.map((item) => (
             <CartCard key={item.id} item={item} />
           ))}
         </div>
@@ -110,7 +112,7 @@ function Home() {
     </div>
 
     {/* Footer */}
-    {items.length > 0 && (
+    {itemWithoutOrderPlaced.length > 0 && (
       <div className="p-5 mt-4 border-t border-gray-200 space-y-3 bg-gray-50 rounded-t-2xl">
         <div className="flex justify-between text-sm text-gray-700">
           <span>Subtotal</span>
